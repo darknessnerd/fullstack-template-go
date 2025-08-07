@@ -1,0 +1,128 @@
+{{template "base.html" .}}
+
+{{define "content"}}
+<div class="text-center">
+    <div class="card">
+        <h1>Welcome to WebUI Skeleton</h1>
+        <p class="mb-2">A Go web application skeleton with built-in authentication and web UI components.</p>
+
+        {{if .isAuthenticated}}
+            <h2>Hello, {{.name}}!</h2>
+            <p>You are successfully authenticated as {{.email}}</p>
+            <a href="/dashboard" class="btn mt-2">Go to Dashboard</a>
+            <a href="/auth/logout" class="btn btn-secondary mt-2">Logout</a>
+        {{else}}
+            <p class="mb-2">Get started by logging in with your Google account.</p>
+            <a href="/auth/login" class="btn">Login with Google</a>
+        {{end}}
+    </div>
+
+    <!-- Example Data Section -->
+    {{if .data}}
+    <div class="card">
+        <h2>Example Data ({{.data.stats.total_items}} items)</h2>
+        <p>Last updated: {{.data.stats.last_updated}}</p>
+
+        <div class="example-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            {{range .data.items}}
+            <div class="example-item" style="border: 1px solid #ddd; padding: 1rem; border-radius: 8px; background: #f9f9f9;">
+                <h3 style="margin: 0 0 0.5rem 0; color: #333;">{{.name}}</h3>
+                <p style="margin: 0; color: #666;">{{.description}}</p>
+                <small style="color: #999;">ID: {{.id}}</small>
+            </div>
+            {{end}}
+        </div>
+
+        <!-- Example API interaction -->
+        <div style="margin-top: 2rem; padding: 1rem; background: #f0f8ff; border-radius: 8px;">
+            <h3>Try the API</h3>
+            <button onclick="fetchExampleData()" class="btn" style="margin-right: 0.5rem;">Fetch API Data</button>
+            <button onclick="createExampleItem()" class="btn btn-secondary">Create Item</button>
+            <div id="api-result" style="margin-top: 1rem; padding: 1rem; background: white; border-radius: 4px; display: none;">
+                <pre id="api-output" style="text-align: left; font-family: monospace; font-size: 12px;"></pre>
+            </div>
+        </div>
+    </div>
+    {{end}}
+
+    <div class="card">
+        <h2>Features</h2>
+        <ul style="text-align: left; max-width: 600px; margin: 0 auto;">
+            <li>✅ Google OAuth2 Authentication</li>
+            <li>✅ JWT Token Management</li>
+            <li>✅ Database Support (SQLite & PostgreSQL)</li>
+            <li>✅ RESTful API Endpoints</li>
+            <li>✅ Web UI Templates</li>
+            <li>✅ Middleware Support</li>
+            <li>✅ Configuration Management</li>
+            <li>✅ Structured Logging</li>
+            <li>✅ Example Handlers & Templates</li>
+        </ul>
+    </div>
+
+    <!-- Quick API Reference -->
+    <div class="card">
+        <h2>API Endpoints</h2>
+        <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+            <h3>Public Endpoints</h3>
+            <ul>
+                <li><code>GET /health</code> - Health check</li>
+                <li><code>GET /api/v1/status</code> - API status</li>
+                <li><code>GET /api/v1/example</code> - Example data</li>
+            </ul>
+
+            <h3>Protected Endpoints (requires auth)</h3>
+            <ul>
+                <li><code>GET /api/v1/profile</code> - User profile</li>
+                <li><code>POST /api/v1/example</code> - Create example item</li>
+                <li><code>GET /dashboard</code> - Dashboard page</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+async function fetchExampleData() {
+    try {
+        const response = await fetch('/api/v1/example');
+        const data = await response.json();
+        showApiResult(JSON.stringify(data, null, 2));
+    } catch (error) {
+        showApiResult('Error: ' + error.message);
+    }
+}
+
+async function createExampleItem() {
+    try {
+        const response = await fetch('/api/v1/example', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: 'Test Item ' + Date.now(),
+                description: 'Created from the web UI',
+                active: true
+            })
+        });
+        const data = await response.json();
+        showApiResult(JSON.stringify(data, null, 2));
+    } catch (error) {
+        showApiResult('Error: ' + error.message);
+    }
+}
+
+function showApiResult(result) {
+    document.getElementById('api-result').style.display = 'block';
+    document.getElementById('api-output').textContent = result;
+}
+
+function logout() {
+    fetch('/auth/logout', {
+        method: 'POST'
+    }).then(() => {
+        window.location.href = '/';
+    });
+}
+</script>
+{{end}}

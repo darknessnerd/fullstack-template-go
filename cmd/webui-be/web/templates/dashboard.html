@@ -1,0 +1,61 @@
+{{define "content"}}
+<div class="card">
+    <h1>Dashboard</h1>
+    {{if .authenticated}}
+        <p>Welcome back, <strong>{{.user_name}}</strong>!</p>
+        <p>Email: {{.user_email}}</p>
+
+        <div style="margin-top: 2rem;">
+            <h2>Your Account</h2>
+            <p>This is your personal dashboard where you can manage your account and access application features.</p>
+
+            <div style="margin-top: 1rem;">
+                <button class="btn" onclick="loadProfile()">Load Profile</button>
+                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div id="profile-data" style="margin-top: 2rem; display: none;">
+            <h3>Profile Information</h3>
+            <div id="profile-content"></div>
+        </div>
+    {{else}}
+        <p>Please <a href="/auth/login">login</a> to access your dashboard.</p>
+    {{end}}
+</div>
+
+<script>
+function loadProfile() {
+    fetch('/api/v1/profile', {
+        headers: {
+            'Authorization': 'Bearer ' + getCookie('auth_token')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert('Error loading profile: ' + data.error);
+            return;
+        }
+
+        document.getElementById('profile-content').innerHTML = `
+            <p><strong>ID:</strong> ${data.id}</p>
+            <p><strong>Name:</strong> ${data.name}</p>
+            <p><strong>Email:</strong> ${data.email}</p>
+            ${data.picture ? `<img src="${data.picture}" alt="Profile Picture" style="width: 64px; height: 64px; border-radius: 50%;">` : ''}
+        `;
+        document.getElementById('profile-data').style.display = 'block';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to load profile');
+    });
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+</script>
+{{end}}

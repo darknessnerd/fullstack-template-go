@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.title}}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+            padding: 1rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-links a:hover {
+            background-color: #f8f9fa;
+        }
+
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 120px);
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        footer {
+            background: #fff;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            padding: 1rem 0;
+            color: #666;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">WebUI Skeleton</div>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    {{if .authenticated}}
+                        <li><a href="/dashboard">Dashboard</a></li>
+                        <li><a href="#" onclick="logout()">Logout</a></li>
+                    {{else}}
+                        <li><a href="/auth/login">Login</a></li>
+                    {{end}}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            {{template "content" .}}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 WebUI Skeleton. Built with Go and authentication ready.</p>
+        </div>
+    </footer>
+
+    <script>
+        function logout() {
+            fetch('/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).then(() => {
+                window.location.href = '/';
+            });
+        }
+    </script>
+</body>
+</html>
+
