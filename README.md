@@ -16,6 +16,38 @@ A Go web application skeleton with built-in authentication and web UI components
 - ✅ Health Check Endpoints
 - ✅ Live Reloading with Air
 
+## Starting a New Project from the Skeleton
+
+**Method 1: Manual Copy**
+- Copy all files from webui-skeleton to your new project directory.
+- Rename the directory and update project names as needed.
+- Install dependencies:
+  ```bash
+  go mod tidy
+  ```
+- Copy .env.example to .env and configure your environment variables.
+- Start development as described in the Quick Start section.
+
+**Method 2: Using Git**
+- Clone the skeleton repository:
+  ```bash
+  git clone git@github.com:darknessnerd/fullstack-template-go.git my-new-project
+  cd my-new-project
+  ```
+- Remove the existing git history:
+  ```bash
+  rm -rf .git
+  ```
+- Initialize a new git repository:
+  ```bash
+  git init
+  git add .
+  git commit -m "Initial commit from skeleton"
+  ```
+- Continue with dependency installation and configuration as above.
+
+Both methods give you a clean starting point for your own project.
+
 ## Quick Start
 
 1. **Clone and setup**:
