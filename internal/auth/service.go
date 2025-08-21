@@ -288,18 +288,3 @@ func (s *Service) generateRandomState() string {
 	rand.Read(b)
 	return fmt.Sprintf("%x", b)
 }
-
-// GetUserFromContext extracts user information from Gin context
-// Returns (userID, email, name, isAuthenticated)
-func GetUserFromContext(c *gin.Context) (int, string, string, bool) {
-	authenticated, exists := c.Get("authenticated")
-	if !exists || !authenticated.(bool) {
-		return 0, "", "", false
-	}
-
-	userID, _ := c.Get("user_id")
-	email, _ := c.Get("user_email")
-	name, _ := c.Get("user_name")
-
-	return userID.(int), email.(string), name.(string), true
-}
